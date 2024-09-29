@@ -3,3 +3,19 @@ Category
 Deadline (Date and TIme)
 Estimated Time
 Priority
+
+
+
+# I want you to create a timetable for me.
+# Working hours : 9:00am to 4:00pm
+# Playing hours : 6:00 pm to 8:00pm
+# I want atleast 7hrs of sleep.
+# My tasks
+# Task A (deadline is tomorrow) : will take 4hrs
+# Task B (deadline is today) : will take 3 hrs
+# Task C (deadline is today) : will take 2 hrs
+# Task D (deadline is tomorrow) : will take 3 hrs
+# I want regular short breaks in between
+# I have to play badminton for 2 hrs
+# I need to do running for 30mins
+# I also need breaks for meals.
