@@ -1,0 +1,5 @@
+Task Name
+Category
+Deadline (Date and TIme)
+Estimated Time
+Priority
