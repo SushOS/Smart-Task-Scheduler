@@ -1,0 +1,221 @@
+.container {
+    max-width: 550px;
+    margin: 25px auto;
+    padding: 25px;
+    background-color: #f8f9fa;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 1);
+    border-radius: 20px;
+}
+
+.container h1 {
+    text-align: center;
+    color: #343a40;
+    margin-bottom: 25px;
+    margin-top: -1px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    font-weight:bold;
+    color: #000000;
+    margin-bottom: 5px;
+    font-size: 20px;
+    justify-content:flex-start;
+}
+
+.rowentry{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.timeentry{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+}
+
+.rowentry input[type="number"],
+.rowentry input[type="text"]{
+    width: 43.5%;
+    padding: 7px;
+    font-size: 1rem;
+    justify-content: end;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.rowentry input[type="time"]{
+    display: inline-block;
+    width: 80%;
+    padding: 5px;
+    font-size: 1rem;
+    justify-content: end;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="time"]:focus {
+    border-color: #4c4c4c;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
+}
+
+.rowentry2{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.goalentry{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.goalentry input[type="text"]{
+    margin-right: 0.2rem;
+    display: inline-block;
+    width: 300px;
+    padding: 7px;
+    font-size: 1rem;
+    justify-content: end;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.addbutton{
+    padding: 9px 10px;
+    background-color: #848484;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.addbutton:hover {
+    background-color: #3a3a3a;
+}
+
+.addbutton:active {
+    transform: scale(0.95);
+}
+
+.savebutton{
+    padding: 10px 10px;
+    background-color: #848484;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.savebutton:hover {
+    background-color: #3a3a3a;
+}
+
+.savebutton:active {
+    transform: scale(0.95);
+}
+
+.goalbox {
+    list-style-type: none;
+    width: 450px;
+    padding: 10px;
+    margin: 20px 0;
+    background-color: #f8f9fa; /* Light background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    max-width: 500px; /* Limits width */
+    margin: 0 auto; /* Centers the box */
+    padding: 15px;
+    border-left: 4px solid #444444; /* Highlight color on the side */
+    /* max-height: 200px;
+    overflow-y: auto;  */
+}
+
+.goalbox li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: white;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    overflow: hidden;
+    word-break: break-all;
+    flex-wrap:wrap;
+    /* text-overflow: ellipsis; */
+}
+
+.goalbox li:hover {
+    background-color: #e9ecef; /* Slightly darker background on hover */
+    transform: scale(1.02); /* Slight zoom effect */
+}
+
+.goalbox li button {
+    background-color: #6c6c6c; /* Remove button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.goalbox li button:hover {
+    background-color: #323232; /* Darker on hover */
+}
+
+.goalbox li button:active {
+    transform: scale(0.95);
+}
+
+.goalbox li button:focus {
+    outline: none; /* Removes default outline */
+}
+
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+span {
+    margin: 0 10px;
+    color: #6c757d;
+    font-size: 1.2rem;
+}

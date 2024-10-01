@@ -1,0 +1,184 @@
+.box{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  
+}
+
+.SignInbox{
+  width:auto;
+  height:auto;
+  background: #eee9e9;
+  /* box-shadow: 5px 5px 5px  rgba(0, 0, 0, 255); */
+  border: 1.5px solid black;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background: rgba(238, 233, 233, 0.5);
+  box-shadow: 0 0 15px  rgb(72, 72, 72);
+  transition: 0.2s ease-in-out; 
+}
+
+.SignInbox:hover {
+  transform: scale(1.01);
+  box-shadow: 8px 8px 8px  rgb(96, 96, 96);
+  background: rgba(238, 233, 233, 0.8);
+}
+
+.SignInbox h1{
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  color: black;
+  font-weight: 600;
+}
+
+.inputContainer {
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.inputbox {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  border-radius: 15px;
+  width: 100%;
+  padding: 8px 8px 8px 40px; 
+  background: transparent;
+  outline: none;
+  border: 2px solid black;
+  color: black;
+  font-size: 17px;
+}
+
+.icon {
+  position: absolute;
+  top: 52%;
+  left: 10px; 
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: rgba(254, 241, 0, 255);
+}
+
+.inputbox::placeholder{
+  font-size: 17px;
+  color: rgb(76, 76, 76);
+  font-style:italic;
+  font-weight: 25;
+}
+
+
+.remfor{
+  position: relative;
+  margin-top: 0.5rem;
+  margin: 0 auto;
+  text-align: left;
+  width: 80%;
+  
+}
+
+.remmm{
+  font-size: 16px;
+  text-align: left;
+  font-weight: normal;
+  color: black;
+}
+
+.loginbutton{
+
+  width: 80%;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  border-radius: 15px;
+  padding: 4px 4px 4px 4px;
+  font-size: 23px;
+  background: transparent;
+  color: black;
+  border: 2px solid black;
+  transition: 0.3s
+}
+
+.loginbutton:hover{
+  background: rgb(179, 179, 179);
+  color: black;
+  cursor: pointer;
+}
+
+.loginbutton:active{
+  transform: scale(0.95);
+}
+
+.forgot{
+  text-align: right;
+  position: relative;
+  margin-top: 0.5rem;
+  margin: 0 auto;
+  text-align: right;
+  width: 80%;
+}
+.forgot a{
+  text-decoration: none;
+  color:rgb(49, 49, 49);
+  font-weight: 600;
+  text-align:right;
+}
+
+.forgot a:hover{
+  text-decoration: underline;
+}
+
+
+.signupway{
+
+  display: flex; 
+  justify-content: space-between;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  font-size: 18px;
+  color: black;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+}
+
+.signupway p {
+  margin-top: 0.0001rem;
+}
+
+.signupway a{
+  text-decoration: none;
+  color:rgb(75, 75, 75);
+  font-weight: 600;
+  margin-left: 3rem;
+}
+
+.signupway a:hover{
+  text-decoration: underline;
+}
+
+
+.popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.popup button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-top: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}

@@ -1,0 +1,23 @@
+.homeimage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 80px); /* Adjust 60px to your navbar height */
+    width: 100%;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  
+  .homeimage img {
+    max-width: 100%;
+    max-height: 95%;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-in-out;
+    opacity: calc(0.85);
+  }
+  
+  .homeimage img:hover {
+    transform: scale(1.02);
+  }
