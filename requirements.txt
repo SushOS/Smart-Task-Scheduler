@@ -2,3 +2,12 @@ langchain
 langchain-ollama
 streamlit
 langchain-experimental
+transformers
+torch
+groq
+langchain-groq
+langchain_core
+faiss-cpu
+python-dotenv
+langchain_community
+langserve
