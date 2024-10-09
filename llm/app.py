@@ -1,8 +1,8 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import datetime
 from langchain_groq import ChatGroq
 import json
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
