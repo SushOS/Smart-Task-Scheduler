@@ -8,6 +8,11 @@ const taskSchema = new mongoose.Schema({
     deadline_time: { type: String, required: true },
     estimatedTime: { type: String, required: true }, // in hours
     priority: { type: String, enum: ['Low', 'Medium', 'High'], required: true },
+    status: {
+        type: String,
+        enum: ['pending', 'completed', 'missed'],
+        default: 'pending'
+    }
 }, {
     timestamps: true,
 });

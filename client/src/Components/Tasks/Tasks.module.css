@@ -1,24 +1,22 @@
 /* Tasks.module.css */
 
 .h1name{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 2rem;
-    margin-left: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  margin-left: 10rem;
 }
 
 .tasksContainer {
-    max-width: 750px;
-    margin: 1rem auto;
-    padding: 2rem;
-    background-color: #f8f9fa;  
-    border-radius: 20px;
-    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 1); */
-    position: relative;
-    /* border-left: 5px solid black; */
-    border-right: 5px solid black;
-  }
+  max-width: 750px;
+  margin: 1rem auto;
+  padding: 2rem;
+  background-color: #f8f9fa;  
+  border-radius: 20px;
+  position: relative;
+  border-right: 5px solid black;
+}
 
 .taskaddbox{
   display: flex;
@@ -150,10 +148,70 @@
   transition: 0.3s ease-in-out;
 }
 
-.taskItem:hover {
+/* New styles for completed/missed tasks */
+.taskItem[data-status="completed"],
+.taskItem[data-status="missed"] {
+  position: relative;
+  overflow: hidden;
+}
+
+.taskItem[data-status="completed"] .status{
+  color: #2e7d32;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.taskItem[data-status="missed"] .status{
+  color: #ff1313;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.taskItem[data-status="pending"] .status{
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.taskItem[data-status="completed"]::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+      -45deg,
+      rgba(128, 128, 128, 0.2),
+      rgba(128, 128, 128, 0.2) 10px,
+      rgba(128, 128, 128, 0.3) 10px,
+      rgba(128, 128, 128, 0.3) 20px
+  );
+  pointer-events: none;
+}
+
+.taskItem[data-status="missed"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+      45deg,
+      rgba(128, 128, 128, 0.2),
+      rgba(128, 128, 128, 0.2) 10px,
+      rgba(128, 128, 128, 0.3) 10px,
+      rgba(128, 128, 128, 0.3) 20px
+  );
+  pointer-events: none;
+}
+
+/* Only apply hover effect to active tasks */
+.taskItem:not([data-status="completed"]):not([data-status="missed"]):hover {
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5);
   transform: translateX(0.75%);
 }
+
 
 .taskName {
   margin-top: 0;
@@ -304,4 +362,9 @@
 
 .generatebutton button:active{
   transform: scale(0.95);
+}
+
+
+.status{
+  margin-top: 4.8rem;
 }

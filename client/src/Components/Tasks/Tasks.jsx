@@ -43,7 +43,7 @@ const Tasks = () => {
     useEffect(() => {
         if(!showAddTask){
             setEditTaskId(null);
-            setNewTask({ taskName: '', category: '', deadline_date: '', deadline_time: '', estimatedTime: '', priority: 'Medium' });
+            setNewTask({ taskName: '', category: '', deadline_date: '', deadline_time: '', estimatedTime: '', priority: 'Medium', status:'pending' });
             setEditTaskId(null);
         }
 
@@ -99,7 +99,7 @@ const Tasks = () => {
                 setTimeout(() => {
                     setSuccess('');
                 }, 3000);
-                setNewTask({ taskName: '', category: '', deadline_date: '', deadline_time: '', estimatedTime: '', priority: 'Medium' });
+                setNewTask({ taskName: '', category: '', deadline_date: '', deadline_time: '', estimatedTime: '', priority: 'Medium', status:'pending' });
                 setEditTaskId(null);
                 setShowAddTask(false);
                 
@@ -135,6 +135,7 @@ const Tasks = () => {
             deadline_time: task.deadline_time,
             estimatedTime: task.estimatedTime,
             priority: task.priority,
+            status: task.status,
         });
         setShowAddTask(true);
 
@@ -198,6 +199,87 @@ const Tasks = () => {
         handleDelete(taskdelete);
         closePopup();
     };
+
+    const handleGenerateTimetable = async () => {
+        try {
+            setError(null);
+            const token = localStorage.getItem('access_token');
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.user.id;
+    
+            // Filter only pending tasks
+            const pendingTasks = tasks.filter(task => task.status.toLowerCase() === 'pending');
+    
+            if (pendingTasks.length === 0) {
+                setError('Please add some pending tasks before generating a timetable');
+                return;
+            }
+    
+            // Fetch preferences
+            const preferencesResponse = await fetch(`${base_url}/preferences/${userId}`);
+            if (!preferencesResponse.ok) {
+                setError('Please set your preferences before generating a timetable');
+                return;
+            }
+            const preferences = await preferencesResponse.json();
+    
+            // Generate timetable with only pending tasks
+            const response = await fetch('http://localhost:5000/api/generate-timetable', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tasks: pendingTasks,  // Send only pending tasks
+                    preferences: preferences
+                }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to generate timetable');
+            }
+    
+            const data = await response.json();
+    
+            console.log(data.schedule);
+    
+            // Store the timetable in database
+            const saveTimetableResponse = await fetch(`${base_url}/timetable`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userId,
+                    schedule: data.schedule
+                }),
+            });
+    
+            if (!saveTimetableResponse.ok) {
+                throw new Error('Failed to save timetable');
+            }
+    
+            const savedTimetable = await saveTimetableResponse.json();
+            localStorage.setItem('generatedTimetable', JSON.stringify(savedTimetable.schedule));
+            localStorage.setItem('timetableId', savedTimetable._id);
+    
+            navigate('/timetable');
+    
+        } catch (error) {
+            console.error('Error generating timetable:', error);
+            setError(error.message || 'Error generating timetable');
+        }
+    };
+
+    const sortedTasks = [...tasks].sort((a, b) => {
+        const statusOrder = {
+            'pending': 1,
+            'missed': 2,
+            'completed': 3
+        };
+        return statusOrder[a.status.toLowerCase()] - statusOrder[b.status.toLowerCase()];
+    });
+    
 
     return (
         <>
@@ -303,6 +385,21 @@ const Tasks = () => {
                             <option value="High">High</option>
                         </select>
                     </div>
+                    <div className={styles.formGroup}>
+                        <label htmlFor="status">Status:</label>
+                        <select
+                            id="status"
+                            name="status"
+                            value={newTask.status}
+                            onChange={(e) => setNewTask({ ...newTask, status: e.target.value })}
+                            required
+                            className={styles.formSelect}
+                        >
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="missed">Missed</option>
+                        </select>
+                    </div>
                     <button type="submit" className={styles.submitButton}>
                         {editTaskId ? 'Update Task' : 'Add Task'}
                     </button>
@@ -310,7 +407,7 @@ const Tasks = () => {
                 </div>
             )}
             <footer className={styles.generatebutton}>
-                <button onClick={() => navigate('/timetable')} >Generate</button>
+                <button onClick={handleGenerateTimetable} >Generate</button>
             </footer>
             
             <div className={styles.tasksContainer}>
@@ -320,20 +417,29 @@ const Tasks = () => {
                     <p className={styles.emptyMessage}>No tasks added yet!</p>
                 ) : (
                     <ul className={styles.taskList}>
-                        {tasks.map((task) => (
-                            <li key={task._id} className={styles.taskItem}>
+                        {sortedTasks.map((task) => (
+                            <li 
+                                key={task._id} 
+                                className={styles.taskItem}
+                                data-status={task.status.toLowerCase()}
+                            >
                                 <div className={styles.taskleft}>
                                     <h3 className={styles.taskName}>{task.taskName}</h3>
                                     <p className={styles.taskDetail}>Category: {task.category}</p>
                                     <p className={styles.taskDetail}>
-                                    Deadline: {new Date(task.deadline_date).toDateString()} {convertTo24HourFormat(task.deadline_time)}
+                                        Deadline: {new Date(task.deadline_date).toDateString()} {convertTo24HourFormat(task.deadline_time)}
                                     </p>
                                     <p className={styles.taskDetail}>Estimated Time: {task.estimatedTime} hours</p>
                                     <p className={styles.taskDetail}>Priority: {task.priority}</p>
                                 </div>
                                 <div className={styles.taskActions}>
-                                    <button onClick={() => handleEdit(task)} className={styles.editButton}><FaEdit color="#3d3d3d" size={30} /></button>
-                                    <button onClick={() => openPopup(task._id)} className={styles.deleteButton}><MdDelete color="#3d3d3d" size={30} /></button>
+                                    <button onClick={() => handleEdit(task)} className={styles.editButton}>
+                                        <FaEdit color="#3d3d3d" size={30} />
+                                    </button>
+                                    <button onClick={() => openPopup(task._id)} className={styles.deleteButton}>
+                                        <MdDelete color="#3d3d3d" size={30} />
+                                    </button>
+                                    <p className={styles.status} >{task.status.toUpperCase()}</p>
                                 </div>
                             </li>
                         ))}

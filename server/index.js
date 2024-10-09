@@ -6,6 +6,7 @@ const asyncHandler = require('express-async-handler');
 const User = require('./models/UserModel');
 const Preference = require('./models/PreferenceModel');
 const Task = require('./models/TaskModel');
+const Timetable = require('./models/TimetableModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -50,7 +51,6 @@ app.post('/signup', asyncHandler(async (req, res) => {
     const hashpassword = await bcrypt.hash(password, 10);
     const user = await User.create({ username, fullname, email, phone, password: hashpassword });
 
-    console.log(user.email);
     res.json(user);
 }));
 
@@ -119,7 +119,6 @@ app.get('/preferences/:userId', async (req, res) => {
     const { userId } = req.params;
     try {
         const preferences = await Preference.findOne({ userId });
-        console.log(preferences)
         if (!preferences) {
             // If no preferences found, return null or a default structure
             res.status(400).json({ message: 'Error fetching preferences', error });
@@ -139,7 +138,6 @@ app.post('/preferences', async (req, res) => {
     try {
         await pref.save();
         res.status(201).json(pref);
-        console.log(data);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -160,9 +158,9 @@ app.put('/preferences/:userId', async (req, res) => {
 
 // Add a new task
 app.post('/tasks', async (req, res) => {
-    const { userId, taskName, category, deadline_date,deadline_time, estimatedTime, priority } = req.body;
+    const { userId, taskName, category, deadline_date,deadline_time, estimatedTime, priority,status } = req.body;
     try {
-        const task = new Task({ userId, taskName, category, deadline_date,deadline_time, estimatedTime, priority });
+        const task = new Task({ userId, taskName, category, deadline_date,deadline_time, estimatedTime, priority,status });
         await task.save();
         res.status(201).json(task);
     } catch (error) {
@@ -184,9 +182,9 @@ app.get('/tasks/:userId', async (req, res) => {
 // Update a task
 app.put('/tasks/:id', async (req, res) => {
     const { id } = req.params;
-    const { taskName, category, deadline_date,deadline_time, estimatedTime, priority } = req.body;
+    const { taskName, category, deadline_date,deadline_time, estimatedTime, priority,status } = req.body;
     try {
-        const task = await Task.findByIdAndUpdate(id, { taskName, category, deadline_date,deadline_time, estimatedTime, priority }, { new: true });
+        const task = await Task.findByIdAndUpdate(id, { taskName, category, deadline_date,deadline_time, estimatedTime, priority,status }, { new: true });
         res.status(200).json(task);
     } catch (error) {
         res.status(400).json({ error: 'Failed to update task' });
@@ -204,6 +202,96 @@ app.delete('/tasks/:id', async (req, res) => {
     }
 });
 
+
+// Store timetable
+app.post('/timetable', async (req, res) => {
+    const { userId, schedule } = req.body;
+
+    try {
+        // Check if a timetable already exists for this user
+        const existingTimetable = await Timetable.findOne({ userId });
+
+        if (existingTimetable) {
+            // If a timetable exists, delete it
+            await Timetable.deleteOne({ userId });
+        }
+
+        // Create a new timetable and save it
+        const newTimetable = new Timetable({
+            userId,
+            schedule,
+        });
+        const savedTimetable = await newTimetable.save();
+
+        res.status(201).json(savedTimetable);
+    } catch (error) {
+        res.status(400).json({ error: 'Failed to save timetable' });
+    }
+});
+
+
+// Get latest timetable for user
+app.get('/timetable/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const timetable = await Timetable.findOne({ userId }).sort({ date: -1 });
+        res.status(200).json(timetable);
+    } catch (error) {
+        res.status(400).json({ error: 'Failed to fetch timetable' });
+    }
+});
+
+app.put('/timetable/:timetableId/task/:taskId', async (req, res) => {
+    const { timetableId, taskId } = req.params;
+    const { status } = req.body;
+    try {
+        const timetable = await Timetable.findById(timetableId);
+        // const taskObjectId = new mongoose.Types.ObjectId(taskId);
+        // Use find instead of findIndex
+        const task = timetable.schedule.find(item => item._id.toString() === taskId);
+
+        if (task) {
+            // Update the status directly on the found task
+            task.status = status;
+            await timetable.save();
+            
+            // If task is missed, update the task in Task collection
+            // if (status === 'missed') {
+            //     await Task.findByIdAndUpdate(taskId, { status: 'missed' });
+            // }
+        }
+
+        res.status(200).json(timetable);
+    } catch (error) {
+        res.status(400).json({ error: 'Failed to update task status' });
+    }
+});
+
+
+// Clean up expired tasks
+app.delete('/timetable/cleanup/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const timetable = await Timetable.findOne({ userId }).sort({ date: -1 });
+        if (timetable) {
+            const currentTime = new Date();
+            timetable.schedule = timetable.schedule.filter(item => {
+                if (item.deadline && new Date(item.deadline) < currentTime) {
+                    if (item.status === 'pending') {
+                        // Mark task as missed if deadline passed and status still pending
+                        Task.findByIdAndUpdate(item.taskId, { status: 'missed' }).exec();
+                    }
+                    return false;
+                }
+                return true;
+            });
+            await timetable.save();
+        }
+        res.status(200).json(timetable);
+    } catch (error) {
+        res.status(400).json({ error: 'Failed to cleanup timetable' });
+    }
+});
 
 // Starting the Server
 app.listen(port, () => console.log(`Server Started at PORT ${port}`));
