@@ -6,7 +6,7 @@ import styles from './ChatBot.module.css';
 
 const ChatBot = ({ preferences, tasks,schedule }) => {
   const [messages, setMessages] = useState([
-    { role: 'system', content: 'Hello! I can help you modify your timetable. What would you like to change?' }
+    { role: 'system', content: 'Hello! Ask me anything about your Schedule' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
