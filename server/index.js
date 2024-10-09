@@ -26,11 +26,11 @@ app.get('/signup/:id', async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        
+    
         res.status(200).json(user);
     } catch (error) {
         console.error('Error fetching user:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal server error' })
     }
 });
 
