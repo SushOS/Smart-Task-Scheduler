@@ -9,7 +9,7 @@ CORS(app)
 
 llm = ChatGroq(
     temperature=0,
-    groq_api_key='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',
+    groq_api_key=GROQ_API_KEY,
     model_name="llama-3.1-70b-versatile",
 )
 
