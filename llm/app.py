@@ -3,6 +3,10 @@ from flask_cors import CORS
 import datetime
 from langchain_groq import ChatGroq
 import json
+from dotenv import load_dotenv
+load_dotenv()
+
+GROQ_API_KEY = os.environ['GROQ_API_KEY']
 
 app = Flask(__name__)
 CORS(app)
