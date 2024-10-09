@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Navbar from "../Navbar/Navbar";
 import TimetableChat from '../TimetableChat/TimetableChat';
+import ChatBot from '../ChatBot/ChatBot';
 import bgimg from '../../assets/bg.jpg';
 import styles from './Timetable.module.css';
 import { base_url } from '../../assets/help';
@@ -241,6 +242,11 @@ const Timetable = () => {
                 tasks={tasks}
                 schedule={schedule}
                 onScheduleUpdate={handleScheduleUpdate}
+            />
+            <ChatBot
+                preferences={preferences}
+                tasks={tasks}
+                schedule={schedule}
             />
         </>
     );

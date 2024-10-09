@@ -209,6 +209,60 @@ Please generate a JSON array of schedule items with the following structure for 
             'message': 'Sorry, I encountered an error while processing your request.',
             'error': str(e)
         }), 500
+    
+
+@app.route('/api/chattimetable', methods=['POST'])
+def chat_timetable():
+    try:
+        data = request.json
+        user_request = data.get('userRequest', '')
+        schedule = data.get('schedule', {})
+        chat_history = data.get('chatHistory', [])
+
+        # Create a context-aware prompt
+        prompt = f"""As an intelligent assistant, analyze the user's request and answer accordingly. 
+
+USER Question:
+{user_request}
+
+CURRENT CHAT CONTEXT:
+{chr(10).join(f"{msg['role']}: {msg['content']}" for msg in chat_history[-3:] if msg['role'] != 'system')}
+
+PREVIOUS GENERATED SCHEDULE:
+{schedule}
+
+"Now give the best answer possible for the user's question or request based on the generated schedule." 
+
+Please generate a simple string for the answer as belows and not generate anything else other than below example:
+
+    "This is the message"
+
+
+"""
+
+        try:
+            # Get response from LLM
+            response = llm.invoke(prompt)
+            print("Raw response:", response.content)  # Debug print
+
+            # Parse the JSON response
+            result = json.loads(response.content)
+            return jsonify({'message': result})
+
+        except json.JSONDecodeError:
+            return jsonify({
+                'message': 'I processed your request but encountered an error formatting the response. Please try rephrasing your request.',
+                'error': 'Could not parse LLM response'
+            }), 500
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({
+            'message': 'Sorry, I encountered an error while processing your request.',
+            'error': str(e)
+        }), 500
+
+    
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
