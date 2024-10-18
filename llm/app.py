@@ -134,7 +134,7 @@ def modify_timetable():
         # Create a context-aware prompt that includes the user's request
         prompt = f"""As an intelligent scheduling assistant, analyze the user's request and modify the schedule accordingly. 
 
-USER REQUEST:
+Most Important is USER REQUEST:
 {user_request}
 
 CURRENT CHAT CONTEXT:
@@ -153,6 +153,8 @@ PERSONAL GOALS:
 
 PREVIOUS GENERATED SCHEDULE:
 {schedule}
+
+''If the task is already Completed or Missed keep it completed or missed.''
 
 ''' Incorporate User requests in the previously generated Schedule. Use the below rules while regenerating the timetable. '''
 
