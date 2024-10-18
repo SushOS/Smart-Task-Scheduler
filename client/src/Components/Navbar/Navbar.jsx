@@ -46,8 +46,9 @@ function Navbar() {
     }, [showDropdown]);
 
     const handleLogout = () => {
-        window.localStorage.clear();
-        navigate('/');
+        window.localStorage.removeItem('isLoggedIn');
+        window.localStorage.removeItem('access_token');
+        navigate('/login');
     };
 
     const openPopup = () => {

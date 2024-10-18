@@ -13,13 +13,14 @@
 
 .navCenter {
     list-style-type: none;
+    /* position:absolute; */
     margin: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     gap: 30px; /* Gap between tasks and timetable */
-    padding-right: 190px; 
+   margin-right: 180px; 
     /* padding-bottom: 1px; */
     margin-top: -5px;   
 }
@@ -83,7 +84,7 @@
     color: white;
     text-align: center;
     font-size: 30px;
-    padding-left: 40px;
+    margin-left: 40px;
 }
 
 .navside li a:hover {
@@ -99,8 +100,8 @@
     align-items: center;
     /* display: inline-block; */
     cursor: pointer;
-    padding-right: 30px;
-    padding-bottom: 5px;
+    margin-right: 30px;
+    margin-bottom: 5px;
 }
 
 .userCircle {
