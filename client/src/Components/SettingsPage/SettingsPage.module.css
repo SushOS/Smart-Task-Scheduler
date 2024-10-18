@@ -1,0 +1,108 @@
+/* SettingsPage.module.css */
+
+.form{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.settingspage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh; /* Full viewport height */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    padding: 20px;
+}
+
+.settingspage h1 {
+    font-size: 2.5rem;
+    color: #232323;
+    margin-bottom: 40px;
+}
+
+.settingspage label {
+    font-size: 30px;
+    color: #282828;
+}
+
+.settingspage select {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light gray border */
+    transition: border-color 0.3s ease; /* Smooth transition */
+}
+
+.settingspage select:hover {
+    border-color: #343434; /* Change border color on hover */
+}
+
+.settingspage select:focus {
+    outline: none; /* Remove default outline */
+    border-color: #343434; /* Change border color on focus */
+}
+
+.settingspage input {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Light gray border */
+    transition: border-color 0.3s ease; /* Smooth transition */
+}
+
+.settingspage input:hover {
+    border-color: #343434; /* Change border color on hover */
+}
+
+.settingspage input:focus {
+    outline: none; /* Remove default outline */
+    border-color: #343434; /* Change border color on focus */
+}
+
+
+.savebutton{
+    padding: 10px 10px;
+    background-color: #646464;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 2rem;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+.savebutton:hover {
+    background-color: #3a3a3a;
+}
+
+.savebutton:active {
+    transform: scale(0.95);
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+span {
+    margin: 0 10px;
+    color: #6c757d;
+    font-size: 1.2rem;
+}
