@@ -15,6 +15,12 @@ const Timetable = () => {
     const [timetableId, setTimetableId] = useState(null);
     const [filter, setFilter] = useState('pending'); // Default filter is 'pending'
     const navigate = useNavigate();
+    const [settings, setSettings] = useState({
+        userId: '',
+        fontstyle:'',
+        fontsize:'',
+        notiftime:15,
+    });
 
     const fetchTasks = async (userId) => {
         try {
@@ -41,18 +47,101 @@ const Timetable = () => {
                 setPreferences([]);
             }
         } catch (error) {
-            console.error('Error fetching tasks:', error);
+            console.error('Error fetching preferences:', error);
             setPreferences([]);
         }
     };
+
+    const sendEmailNotification = async (task, userEmail) => {
+        try {
+            const response = await fetch(`${base_url}/send-notif`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    to: userEmail,
+                    subject: `Upcoming Task: ${task.activity}`,
+                    text: `Your task "${task.activity}" is due in 15 minutes at ${task.time} on ${task.date}.`
+                }),
+            });
+
+            if (response.ok) {
+                console.log(`Email notification sent for task: ${task.activity}`);
+            } else {
+                console.error('Failed to send email notification');
+            }
+        } catch (error) {
+            console.error('Error sending email notification:', error);
+        }
+    };
+
+    const checkUpcomingTasks = () => {
+        if (!schedule) {
+            console.log('Schedule is not loaded yet');
+            return;
+        }
+    
+        const now = new Date();
+        const userEmail = jwtDecode(localStorage.getItem('access_token')).user.email;
+        console.log(userEmail);
+
+        schedule.forEach(task => {
+            if (task.status === 'pending') {
+                // Assuming task.date is in 'YYYY-MM-DD' format and task.time is in 'HH:MM' format
+                const [day, month, year] = task.date.split('/');
+                const [hours, minutes] = task.time.split(':');
+                
+                // Create taskDateTime with the correct year, month, day, hours, and minutes
+                const taskDateTime = new Date(year, month - 1, day, hours, minutes);
+
+                // Calculate the difference in minutes
+                const timeDiff = taskDateTime.getTime() - now.getTime();
+                const minutesDiff = Math.floor(timeDiff / 60000);
+                console.log(minutesDiff);
+
+                // Check if the task is 15 minutes away
+                if (minutesDiff === settings.notiftime) {
+                    sendEmailNotification(task, userEmail);
+                }
+            }
+        });
+
+    };
+
+    useEffect(() => {
+        if (schedule) {
+            const intervalId = setInterval(checkUpcomingTasks, 60000);
+            return () => clearInterval(intervalId);
+        }
+    }, [schedule]);
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
         const decodedToken = jwtDecode(token);
         const userId = decodedToken.user.id;
         fetchTasks(userId);
-        fetchpreferences(userId)
+        fetchpreferences(userId);
+        fetchSettings(userId);
     }, []);
+
+    
+
+    const fetchSettings = async (userId) => {
+        try {
+            const response = await fetch(`${base_url}/settings/${userId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setSettings(data);
+                setSettingsExist(true);
+            } 
+            else {
+                setSettingsExist(false);
+            }
+        } catch (error) {
+            setSettingsExist(false);
+        }
+    };
 
     useEffect(() => {
         document.body.style.backgroundImage = `url(${bgimg})`;
@@ -166,6 +255,7 @@ const Timetable = () => {
 
     const handleScheduleUpdate = (newSchedule) => {
         setSchedule(newSchedule);
+        window.location.reload();
     };
 
     return (
@@ -204,9 +294,7 @@ const Timetable = () => {
                         </thead>
                         <tbody>
                             {filteredSchedule.map((item, index) => (
-                                <tr 
-                                    key={index} 
-                                >
+                                <tr key={index}>
                                     <td>{item.date}</td>
                                     <td>{item.time}</td>
                                     <td>{item.activity}</td>

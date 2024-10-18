@@ -119,6 +119,47 @@ const Tasks = () => {
         }
     };
 
+    const deleteExpiredTasks = async () => {
+        const currentDate = new Date();
+    
+        const expiredTasks = tasks.filter(task => {
+            const deadlineDate = new Date(task.deadline_date).toISOString().split('T')[0]; 
+            const taskDeadline = new Date(`${deadlineDate}T${task.deadline_time}:00`);
+            return taskDeadline < currentDate && task.status !== 'pending';
+        });
+        
+        for (const task of expiredTasks) {
+            try {
+                await fetch(`${base_url}/tasks/${task._id}`, {
+                    method: 'DELETE',
+                });
+            } catch (error) {
+                console.error('Error deleting expired task:', error);
+            }
+        }
+    
+        if (expiredTasks.length > 0) {
+            const token = localStorage.getItem('access_token');
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.user.id;
+            fetchTasks(userId);
+        }
+    };
+    
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.user.id;
+        fetchTasks(userId);
+
+        const intervalId = setInterval(() => {
+            deleteExpiredTasks();
+        }, 60000); 
+
+        return () => clearInterval(intervalId);
+    }, []);
+
     function convertTo24HourFormat(timeString) {
         const [hour, minute] = timeString.split(':');
         let formattedHour = parseInt(hour);
